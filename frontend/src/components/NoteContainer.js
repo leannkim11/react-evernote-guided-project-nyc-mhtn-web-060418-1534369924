@@ -10,7 +10,8 @@ class NoteContainer extends Component {
     allNotes: [],
     editableNotes: [],
     clickedNote: {},
-    isClicked: false
+    isClicked: false,
+    searchTerm: ""
   };
 
   componentDidMount() {
@@ -69,10 +70,31 @@ class NoteContainer extends Component {
       .then(() => this.handleRender());
   };
 
+  handleSearch = event => {
+    this.setState(
+      {
+        searchTerm: event.target.value
+      },
+      () => this.handleFilter()
+    );
+  };
+
+  handleFilter = () => {
+    let searchFilter = this.state.allNotes.filter(note =>
+      note.title.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+    );
+    this.setState({
+      editableNotes: searchFilter
+    });
+  };
+
   render() {
     return (
       <Fragment>
-        <Search />
+        <Search
+          searchTerm={this.state.searchTerm}
+          handleSearch={this.handleSearch}
+        />
         <div className="container">
           <Sidebar
             allNotes={this.state.allNotes}
