@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import NoteEditor from './NoteEditor';
-import NoteViewer from './NoteViewer';
-import Instructions from './Instructions';
+import React, { Component } from "react";
+import NoteEditor from "./NoteEditor";
+import NoteViewer from "./NoteViewer";
+import Instructions from "./Instructions";
 
 /*
   Advice: If you cannot figure out how to get this component to work,
@@ -10,22 +10,58 @@ import Instructions from './Instructions';
           Then complete the rest of your app before attempting to
           refactor to get this Content component to work.
 */
+
 class Content extends Component {
+  state = {
+    editClicked: false,
+    title: this.props.clickedNote.title,
+    body: this.props.clickedNote.body
+  };
+
+  editClicked = () => {
+    this.setState({
+      editClicked: true
+    });
+  };
+
+  handleOnChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
+  handleCancelButton = () => {
+    this.setState({
+      editClicked: false
+    });
+  };
+
   renderContent = () => {
-    if (false) {
-      return <NoteEditor />;
-    } else if (false) {
-      return <NoteViewer />;
+    if (this.props.isClicked && this.state.editClicked) {
+      return (
+        <NoteEditor
+          editClicked={this.state.editClicked}
+          handleCancelButton={this.handleCancelButton}
+          clickedNote={this.props.clickedNote}
+          handlePatch={this.props.handlePatch}
+        />
+      );
+    }
+    if (this.props.isClicked === true) {
+      return (
+        <NoteViewer
+          clickednote={this.props.clickedNote}
+          editClicked={this.editClicked}
+        />
+      );
     } else {
       return <Instructions />;
     }
-  }
+  };
 
   render() {
     return (
-      <div className='master-detail-element detail'>
-        {this.renderContent()}
-      </div>
+      <div className="master-detail-element detail">{this.renderContent()}</div>
     );
   }
 }
